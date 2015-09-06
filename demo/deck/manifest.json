@@ -1,0 +1,9 @@
+{
+  "baseImagePath": "./deck/images",
+  "baseHTMLTemplatePath": "./deck/htmlincludes",
+  "content": [
+    { "name": "Chapter 1", "file": "./deck/chapters/chapter1.json" },
+    { "name": "Chapter 2", "file": "./deck/chapters/chapter2.json" },
+    { "name": "Chapter 3", "file": "./deck/chapters/chapter3.json" }
+  ]
+}

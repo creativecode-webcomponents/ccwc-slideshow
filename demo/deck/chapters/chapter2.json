@@ -1,0 +1,55 @@
+{
+  "slides": [
+    {
+      "text": [
+        {
+          "region": "header",
+          "html": "Chapter 2"
+        },
+        {
+          "region": "footer",
+          "html": "Slide 1"
+        }
+      ],
+      "background": "bgimage.jpg",
+      "backgroundProperties": {
+        "bounds": "cover"
+      },
+      "number": 1
+    },
+    {
+      "text": [
+        {
+          "region": "header",
+          "html": "Chapter 2"
+        },
+        {
+          "region": "footer",
+          "html": "Slide 2"
+        }
+      ],
+      "background": "bgimage.jpg",
+      "backgroundProperties": {
+        "bounds": "cover"
+      },
+      "number": 1
+    },
+    {
+      "text": [
+        {
+          "region": "header",
+          "html": "Chapter 2"
+        },
+        {
+          "region": "footer",
+          "html": "Slide 3"
+        }
+      ],
+      "background": "bgimage.jpg",
+      "backgroundProperties": {
+        "bounds": "cover"
+      },
+      "number": 1
+    }
+  ]
+}
