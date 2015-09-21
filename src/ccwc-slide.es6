@@ -37,6 +37,7 @@ class CCWCSlide extends HTMLElement {
     this.dom = {};
     this.dom.background = this.root.querySelector('#background');
     this.dom.htmlinclude = this.root.querySelector('#htmlinclude');
+    this.dom.webframe = this.root.querySelector('#webframe');
   };
 
   /**
@@ -57,7 +58,24 @@ class CCWCSlide extends HTMLElement {
    * @param {object} background properties
    */
   setHTML(template) {
-    this.loadResource(this.htmltemplatepath + '/' + template, () => this.onHTMLReceived);
+    this.loadResource(this.htmltemplatepath + '/' + template, (data) => this.onHTMLReceived(data));
+  };
+
+  /**
+   * sets the html content of the slide via an HTML template
+   * @param {String} uri
+   */
+  setIFrame(opts) {
+    this.dom.webframe.setAttribute('src', opts.url);
+
+    if (opts.width) {
+      this.dom.webframe.setAttribute('width', opts.width);
+    }
+
+    if (opts.height) {
+      this.dom.webframe.setAttribute('height', opts.height);
+    }
+    this.removeClass(this.dom.webframe, 'hidden');
   };
 
   /**
@@ -123,6 +141,17 @@ class CCWCSlide extends HTMLElement {
     this.clearText();
     this.clearImages();
     this.clearHTMLTemplate();
+    this.clearIFrame();
+  };
+
+  /**
+   * clear text
+   *
+   * @method clear all text in regions
+   */
+  clearIFrame() {
+    this.dom.webframe.setAttribute('src', '');
+    this.addClass(this.dom.webframe, 'hidden');
   };
 
   /**
@@ -228,28 +257,18 @@ class CCWCSlide extends HTMLElement {
    * @param {function} callback
    */
   loadResource(resource, cb) {
-    var self = this;
     var response;
-    var fs = require('fs');
-
-    if (fs) { // are we using node?
-      response = fs.readFileSync(resource);
-      cb.apply(self, [response]);
-      return;
-    }
-
     var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
+    xmlhttp.onreadystatechange = () => {
       if (xmlhttp.readyState == 4 ) {
         if(xmlhttp.status == 200) {
           response = xmlhttp.responseText;
         } else {
           response = '<span>Slide Content is missing, please check your path</span>';
         }
-        cb.apply(self, [response]);
+        cb.apply(this, [response]);
       }
     };
-    //xmlhttp.open("GET", "slides/htmlincludes/" + template, true);
     xmlhttp.open("GET", resource, true);
     xmlhttp.send();
   };

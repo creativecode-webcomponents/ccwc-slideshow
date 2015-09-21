@@ -58,6 +58,7 @@ var CCWCSlide = (function (_HTMLElement) {
       this.dom = {};
       this.dom.background = this.root.querySelector('#background');
       this.dom.htmlinclude = this.root.querySelector('#htmlinclude');
+      this.dom.webframe = this.root.querySelector('#webframe');
     }
   }, {
     key: 'getHTMLIncludeElementsByClass',
@@ -84,9 +85,28 @@ var CCWCSlide = (function (_HTMLElement) {
     value: function setHTML(template) {
       var _this = this;
 
-      this.loadResource(this.htmltemplatepath + '/' + template, function () {
-        return _this.onHTMLReceived;
+      this.loadResource(this.htmltemplatepath + '/' + template, function (data) {
+        return _this.onHTMLReceived(data);
       });
+    }
+  }, {
+    key: 'setIFrame',
+
+    /**
+     * sets the html content of the slide via an HTML template
+     * @param {String} uri
+     */
+    value: function setIFrame(opts) {
+      this.dom.webframe.setAttribute('src', opts.url);
+
+      if (opts.width) {
+        this.dom.webframe.setAttribute('width', opts.width);
+      }
+
+      if (opts.height) {
+        this.dom.webframe.setAttribute('height', opts.height);
+      }
+      this.removeClass(this.dom.webframe, 'hidden');
     }
   }, {
     key: 'onHTMLReceived',
@@ -165,6 +185,19 @@ var CCWCSlide = (function (_HTMLElement) {
       this.clearText();
       this.clearImages();
       this.clearHTMLTemplate();
+      this.clearIFrame();
+    }
+  }, {
+    key: 'clearIFrame',
+
+    /**
+     * clear text
+     *
+     * @method clear all text in regions
+     */
+    value: function clearIFrame() {
+      this.dom.webframe.setAttribute('src', '');
+      this.addClass(this.dom.webframe, 'hidden');
     }
   }, {
     key: 'clearText',
@@ -290,17 +323,9 @@ var CCWCSlide = (function (_HTMLElement) {
      * @param {function} callback
      */
     value: function loadResource(resource, cb) {
-      var self = this;
+      var _this4 = this;
+
       var response;
-      var fs = require('fs');
-
-      if (fs) {
-        // are we using node?
-        response = fs.readFileSync(resource);
-        cb.apply(self, [response]);
-        return;
-      }
-
       var xmlhttp = new XMLHttpRequest();
       xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState == 4) {
@@ -309,10 +334,9 @@ var CCWCSlide = (function (_HTMLElement) {
           } else {
             response = '<span>Slide Content is missing, please check your path</span>';
           }
-          cb.apply(self, [response]);
+          cb.apply(_this4, [response]);
         }
       };
-      //xmlhttp.open("GET", "slides/htmlincludes/" + template, true);
       xmlhttp.open("GET", resource, true);
       xmlhttp.send();
     }
